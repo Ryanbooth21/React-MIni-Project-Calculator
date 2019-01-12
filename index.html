@@ -1,0 +1,162 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>React Calculator</title>
+  <meta name="description">
+  <meta name="Ryan Booth">
+  <!--React/Jquery scripts -->
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <link rel="stylesheet" href="ShoppingList.css">
+  <style>
+    body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: blue;
+    }
+    #buttons{
+      display: flex;
+      flex-wrap: wrap;
+      width: 30em;
+    }
+    .buttonClass{
+      display: flex;
+      width: 5em;
+      height: 5em;
+      flex-basis: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #displayBox{
+      width: 93%;
+      height: 5em;
+      padding-left: 1em;
+      font-size: 15px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    #Title{
+      color: white;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+  </div>
+</body>
+</html>
+
+<script type="text/babel">
+
+
+function Title(){
+  return(
+    <h1 id="Title">React Calculator</h1>
+  )
+}
+function Display(props){
+  return(
+    <input id="displayBox" type="text" value={props.expression} disabled={true}/>
+    )
+  }
+
+class Buttons extends React.Component{
+  constructor(){
+    super()
+    this.onKeyPressed = this.onKeyPressed.bind(this)
+  }
+
+  onKeyPressed(){
+    this.props.onKeyPressed(this.props.text)
+  }
+
+  render(){
+    return(
+      <button className="buttonClass" onClick={this.onKeyPressed}>{this.props.text}</button>
+    )
+  }
+}
+
+
+class App extends React.Component{
+  constructor(){
+    super()
+    this.state = {
+      expression: ""
+    }
+    this.onDeletePressed = this.onDeletePressed.bind(this)
+    this.onEvaluatePressed = this.onEvaluatePressed.bind(this)
+    this.onKeyPressed = this.onKeyPressed.bind(this)
+    this.backToNull = this.backToNull.bind(this)
+  }
+  onDeletePressed(){
+    this.setState((prev)=>({
+      expression: prev.expression.length <= 1 ? "0" : prev.expression.slice(0,-1)
+    }))
+  }
+
+  onEvaluatePressed(){
+    this.setState((prev)=>({
+      expression: eval(prev.expression).toString()
+    }))
+  }
+componentDidUpdate(){
+  if (this.state.expression === "0"){
+    this.setState({
+      expression: ""
+    })
+  }
+}
+
+  onKeyPressed(text){
+    this.setState((prev)=>({
+      expression: prev.expression + text
+    }))
+  }
+  backToNull(){
+    this.setState((prev)=>({
+      expression: ""
+    }))
+  }
+  render(){
+    return(
+      <div id="buttons">
+      <Title/>
+      <Display expression={this.state.expression}  />
+      <Buttons text="0" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="1" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="2" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="3" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="4" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="5" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="6" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="7" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="8" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="9" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="+" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="*" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="-" onKeyPressed={this.onKeyPressed} />
+      <Buttons text="/" onKeyPressed={this.onKeyPressed} />
+      <button className="buttonClass" onClick={this.onDeletePressed}>Del</button>
+      <button className="buttonClass" onClick={this.onEvaluatePressed}>=</button>
+      <button className="buttonClass" onClick={this.backToNull}>Clr</button>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+</script>
